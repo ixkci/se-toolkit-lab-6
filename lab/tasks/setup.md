@@ -45,10 +45,9 @@
 ## 1. Required steps
 
 > [!IMPORTANT]
-> `(UPD)`
+> Complete all steps if you haven't completed the full setup in previous labs.
 >
-> These steps must be completed to get the right setup for this lab,
-> even if you have completed similar steps in the previous lab.
+> Otherwise, complete just the steps with the `(UPD)` label to get the right setup for this lab.
 
 > [!IMPORTANT]
 > Complete the steps with the label:
