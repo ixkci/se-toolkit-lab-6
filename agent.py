@@ -150,6 +150,11 @@ Rules:
 6. For analytics endpoints, try multiple lab values (e.g., lab-01, lab-99) to reproduce errors.
 7. For infrastructure questions (Docker, request flow), read the relevant config files (docker-compose.yml, Dockerfile, Caddyfile) and trace the full path.
 8. You can call tools sequentially. If a file or folder is not found, try exploring other directories using `list_files`. DO NOT give up immediately.
+9. BUG HUNTING IN CODE: When asked to find bugs or risky operations in source code (especially in analytics.py), you MUST carefully read the file and explicitly look for:
+   - Unsafe division operations that could cause ZeroDivisionError (e.g., dividing by len(items) without checking if it's 0).
+   - Unsafe sorting or operations on objects that might be None (e.g., calling .sort() or .get() on a NoneType object).
+   Explain exactly what line causes the bug.
+10. CODE COMPARISON: When asked to compare error handling strategies (e.g., ETL pipeline vs API routers), you MUST use `read_file` to read BOTH files (e.g., `etl.py` and the router files in `backend/app/routers/`). Explain how one might crash on error while the other catches it (e.g. try/except blocks vs raw execution).
 
 CRITICAL FINAL OUTPUT RULE:
 ONLY when you have the complete answer, output the final JSON:
