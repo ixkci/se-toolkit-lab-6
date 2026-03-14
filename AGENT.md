@@ -1,20 +1,19 @@
-# Agent Documentation (Task 1)
+# Agent Documentation
 
-## Architecture
+## Architecture & Agentic Loop
 
-This is a basic CLI agent built in Python. It takes a single string query from the command line, sends it to an LLM, and prints the result to standard output in a strict JSON format.
+The agent implements an iterative loop to answer questions by exploring the local filesystem.
 
-All diagnostic messages, errors, and logs are directed to `stderr` to ensure that `stdout` only ever contains parsable JSON.
+1. It sends the user's question and a system prompt to the LLM, along with available tool definitions.
+2. If the LLM requests a tool call, the agent pauses, executes the corresponding Python function, and appends the result to the conversation history as a `tool` role message.
+3. This loop continues until the LLM stops calling tools and provides a final answer, or until the safety limit of 10 tool calls is reached.
+4. The final answer is parsed as JSON, combined with the history of all executed tool calls, and output to `stdout`.
 
-## LLM Configuration
+## Tools
 
-- **Provider:** Qwen Code API (hosted on remote VM)
-- **Model:** `coder-model`
-- **Authentication:** The agent reads `LLM_API_KEY`, `LLM_API_BASE`, and `LLM_MODEL` from the `.env.agent.secret` file.
+1. **`list_files`**: Lists contents of a directory. Used by the LLM to discover what files exist (e.g., in the `wiki` folder).
+2. **`read_file`**: Reads the text content of a file. Used by the LLM to extract information.
 
-## Usage
+## Security
 
-Run the agent using `uv`:
-
-```bash
-uv run agent.py "What does REST stand for?"
+Path traversal (e.g., `../../etc/passwd`) is prevented using Python's `pathlib`. All tool paths are resolved to absolute paths and verified to ensure they start with the absolute path of the project's root directory. Any attempt to access files outside the project results in an "Access denied" error being returned to the LLM.
